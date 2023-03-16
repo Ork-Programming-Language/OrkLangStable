@@ -2,6 +2,7 @@ using System.Net.Sockets;
 using System.Numerics;
 using System.Reflection;
 using Antlr4.Runtime;
+using Antlr4.Runtime.Misc;
 using OrkLang.Runtime.Content;
 
 namespace OrkLang.Runtime;
@@ -85,14 +86,49 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
 
     public override object? VisitIfBlock(SimpleParser.IfBlockContext context)
     {
-        //var condition = Visit(context.expression());
-        
-        //if (condition is bool b && b)
-        //{
-        //    return Visit(context.block());
-        //}
-        //return null;
-        return base.VisitIfBlock(context);
+        //Get value
+        var compCondition = context.expression() as SimpleParser.ComparisonExpressionContext;
+        // Evaluate the expression
+        var condition = (bool)VisitComparisonExpression(compCondition);
+
+        // If the condition is true, visit the if block
+        if (condition)
+        {
+            return VisitBlock(context.block());
+        }
+        // Otherwise, visit the elseIfBlock (if it exists)
+        else
+        {
+            SimpleParser.ElseIfBlockContext elseIfBlockContext = context.elseIfBlock();
+            if (elseIfBlockContext != null)
+            {
+                return VisitElseIfBlock(elseIfBlockContext);
+            }
+            else
+            {
+                return null;
+            }
+        }
+        //SimpleParser.ExpressionContext condition = context.expression();
+        //var s = condition as SimpleParser.ComparisonExpressionContext;
+        //var t = VisitComparisonExpression(s);
+
+
+        //return base.VisitIfBlock(context);
+    }
+
+    public override object VisitElseIfBlock([NotNull] SimpleParser.ElseIfBlockContext context)
+    {
+        // If this is an if block, evaluate the condition and visit the block
+        if (context.ifBlock() != null)
+        {
+            return VisitIfBlock(context.ifBlock());
+        }
+        // Otherwise, visit the block directly
+        else
+        {
+            return Visit(context.block());
+        }
     }
 
     public override object? VisitAssignment(SimpleParser.AssignmentContext context)
@@ -105,7 +141,8 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
 
         return null; //base.VisitAssignment(context);
     }
-    
+
+    #region TempOld
     /*
     //funcBlock: 'func' IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block;
     public override object? VisitFuncBlock(SimpleParser.FuncBlockContext context)
@@ -175,6 +212,7 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
 
         return null; //base.VisitBlock(context);
     } */
+    #endregion
 
     public override object? VisitNamespaceBlock(SimpleParser.NamespaceBlockContext context)
     {

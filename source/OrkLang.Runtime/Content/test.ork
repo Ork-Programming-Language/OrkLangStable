@@ -3,16 +3,25 @@ name = 'test "' + i + '" test';
 
 print(name);
 
+if (8 > 9)
+{
+    print("true");
+}
+else
+{
+    print("false");
+}
+
 namespace exampleNamespace
 {
 
-   // func example()
-   // {
-   //     print("func = hello world");
-   // }
+    //func example()
+    //{
+    //    print("func = hello world");
+    //}
     
-   // func example2(i)
-   // {
+    //func example2(i)
+    //{
     //    print("func2 = hello world");
     //}
     

@@ -1,0 +1,72 @@
+i = 1;
+name = 'test "' + i + '" test';
+
+print(name);
+
+namespace exampleNamespace
+{
+
+   // func example()
+   // {
+   //     print("func = hello world");
+   // }
+    
+   // func example2(i)
+   // {
+    //    print("func2 = hello world");
+    //}
+    
+    class myClass
+    {
+        print("class = hello world");
+    }
+
+    //need to store function names and params
+    //example();
+    
+    print("namespace = hello world");
+}
+
+class exampleCube
+{
+    print("class = hello world");
+}
+
+while (i < 8)
+{
+    print("While: i is smol mak bigger: ");
+    
+    i = i + 1 * 4;
+    
+    print(i);
+}
+else
+{
+    print("tis big");
+}
+
+until (i > 15)
+{
+    print("Until: i is smol mak bigger: ");
+    
+    i = i + 1 * 4;
+    
+    print(i);
+}
+else
+{
+    print("tis big");
+}
+
+print();
+
+j = i + 1.2;
+
+print("i is: " + i);
+print("j is: " + i);
+
+//write("Enter value: ");
+//k = readLine();
+//print("Entered Value: " + k);
+
+write("char");

@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Net.Mime;
+using System.Runtime.CompilerServices;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
 using OrkLang.Runtime.Content;
@@ -11,6 +12,7 @@ class Program
 {
     public static void Main(string[] args)
     {
+        string version = "v0.0.6-alpha";
         bool isDebug = true;
 
         string filename;

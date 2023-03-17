@@ -125,6 +125,7 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
 
     void test()
     {
+        
         // var memberAccess = SimpleParser
         /*Member access *does* exist, we just need to pair it with something */
         //var memberAccess = SimpleParser.MemberAccessContext.memberAccess();

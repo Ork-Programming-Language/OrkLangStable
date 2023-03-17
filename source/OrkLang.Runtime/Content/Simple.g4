@@ -36,7 +36,7 @@ expression
     | functionCall                      #functionCallExpression
     | '(' expression ')'                #parenthesizedExpression
     | '!' expression                    #notExpression
-    | ('++' | '--')                     #incrementDecrementExpression
+    | expression increment              #incrementDecrementExpression //i++ //note expression(i) increment expression(i) doesnt work we need increment expression increment
     | expression multOp expression      #multiplicativeExpression
     | expression addOp expression       #additiveExpression
     | expression compareOp expression   #comparisonExpression
@@ -52,6 +52,7 @@ argumentList
     : expression ('.' expression)*
     ;
 
+increment: '++' | '--';
 multOp: '*' | '/' | '%';
 addOp: '+' | '-';
 compareOp: '==' | '!=' | '>' | '<' | '>=' | '<=';

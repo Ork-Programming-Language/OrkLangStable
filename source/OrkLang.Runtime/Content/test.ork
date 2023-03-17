@@ -3,6 +3,10 @@ name = 'test "' + i + '" test';
 
 print(name);
 
+u = false;
+
+print(convert(u));
+
 if (8 > 9)
 {
     print("true");
@@ -13,11 +17,6 @@ else
 }
 
 //remove namespace and class for the moment
-
-class exampleCube
-{
-    print("class = hello world");
-}
 
 while (i < 8)
 {

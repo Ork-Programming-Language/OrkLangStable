@@ -299,10 +299,14 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
 
         if (condition(Visit(context.expression())))
         {
-            do
+            while (condition(Visit(context.expression())))
             {
                 Visit(context.block());
-            } while (condition(Visit(context.expression())));
+            }
+            //do
+           // {
+           //     Visit(context.block());
+           // } while (condition(Visit(context.expression())));
         }
         else
         {

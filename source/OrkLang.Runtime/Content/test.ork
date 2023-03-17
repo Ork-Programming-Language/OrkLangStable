@@ -5,6 +5,8 @@ print(name);
 
 u = false;
 
+
+
 print(convert(u));
 
 if (8 > 9)
@@ -15,7 +17,7 @@ else
 {
     print("false");
 }
-
+/*
 //remove namespace and class for the moment
 
 while (i < 8)
@@ -31,6 +33,7 @@ else
     print("tis big");
 }
 
+
 until (i > 15)
 {
     print("Until: i is smol mak bigger: ");
@@ -43,16 +46,17 @@ else
 {
     print("tis big");
 }
+*/
 
 l = 1;
 print("1 is now: " + l++);
 
 print();
 
-j = i + 1.2;
+//j = i + 1.2;
 
-print("i is: " + i);
-print("j is: " + i);
+//print("i is: " + i);
+//print("j is: " + i);
 
 print("10: " + convert("10"))
 

@@ -2,9 +2,9 @@ grammar Simple;
 
 program: line* EOF;
 
-line: statement | ifBlock | whileBlock | funcBlock | namespaceBlock | constructorBlock | classBlock | block;
+line: statement | ifBlock | whileBlock | tryCatchBlock | funcBlock | namespaceBlock | constructorBlock | classBlock | block;
 
-statement: (assignment | functionCall) ';';
+statement: (assignment | functionCall) ';'; //importBlock |
 
 ifBlock: 'if' '(' expression ')' block ('else' elseIfBlock)?;
 
@@ -19,6 +19,13 @@ classBlock: 'class' IDENTIFIER block;
 
 funcBlock: 'func' IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block;
 
+tryCatchBlock: 'try' block 'catch' block; //eventually support exceptions
+
+//importBlock: 'import' filename=STRING_LITERAL;
+
+//what goes into a ternay block exactly
+//TernayOperatorBlock: expression '?' STRING ':' STRING ';';
+
 WHILE: 'while' | 'until';
 
 //function Keywords (Cannot be overwritten)
@@ -29,6 +36,10 @@ WHILE: 'while' | 'until';
 assignment: IDENTIFIER '=' expression;
 
 functionCall: IDENTIFIER '(' (expression (',' expression)*)? ')';
+
+//inlineBlock: 'inline' '{{' csharpCode '}}';
+
+//csharpCode: .*?;
 
 expression
     : constant                          #constantExpression
@@ -57,8 +68,8 @@ multOp: '*' | '/' | '%';
 addOp: '+' | '-';
 compareOp: '==' | '!=' | '>' | '<' | '>=' | '<=';
 boolOp: BOOL_OPERATOR;
-
-BOOL_OPERATOR: 'and' | 'or' | 'xor';
+//&&, ||, ^, ~
+BOOL_OPERATOR: 'and' | 'or' | 'xor' | '&&' | '||' | '^';
 
 constant: INTEGER | FLOAT | STRING | BOOL | NULL;
 
@@ -68,13 +79,21 @@ STRING: ('"' ~'"'* '"') | ('\'' ~'\''* '\'');
 BOOL: 'true' | 'false';
 NULL: 'null';
 
+SEMICOLON: ';';
+
+STRING_LITERAL 
+ : '"' ( '\\' [btnfr"'\\] | ~[\r\n\\"] )* '"'
+ ;
+
 block: '{' line* '}';
 
 WS: [ \t\r\n]+ -> skip;
 IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
 
 //Comments
-Comment: '//' CommentLine* -> skip;
+SL_Comment: '//' CommentLine* -> skip;
 fragment CommentLine: ~[\\\r\n] | Escape;
+
+ML_Comment: '/*' .*? '*/' -> skip;
 
 fragment Escape: '\\\'' | '\\"' | '\\\\' | '\\n' | '\\r';

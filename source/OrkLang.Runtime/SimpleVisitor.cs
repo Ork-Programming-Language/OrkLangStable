@@ -4,6 +4,8 @@ using System.Numerics;
 using System.Reflection;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
+using Microsoft.CodeAnalysis.Scripting;
 using OrkLang.Runtime.Content;
 
 namespace OrkLang.Runtime;
@@ -131,6 +133,64 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
         //var memberAccess = SimpleParser.MemberAccessContext.memberAccess();
     }
 
+    /*
+    public override object VisitInlineBlock([NotNull] SimpleParser.InlineBlockContext context)
+    {
+        string csharpCode = context.csharpCode().GetText();
+        Console.WriteLine(csharpCode);
+        ScriptState<object> state = CSharpScript.RunAsync(csharpCode).Result;
+
+        foreach (var variable in state.Variables)
+        {
+            Variables[variable.Name] = variable.Value;
+        }
+
+        //was I always missing return null?
+        return null;
+        //return base.VisitInlineBlock(context);
+    }*/
+
+    public override object VisitTryCatchBlock([NotNull] SimpleParser.TryCatchBlockContext context)
+    {
+        object? tryBlock = null;
+        object? catchBlock = null;
+
+        try
+        {
+            // Visit the `try` block
+            tryBlock = Visit(context.block(0));
+        }
+        catch (Exception e)
+        {
+            if (catchBlock != null)
+            {
+                catchBlock = Visit(context.block(1));
+            }
+            else
+            {
+                Console.WriteLine($"Error in try/catch block: {e.Message}");
+            }
+        }
+
+        return (tryBlock, catchBlock);
+        //return base.VisitTryCatchBlock(context);
+    }
+
+    /*
+    public override object VisitImportBlock([NotNull] SimpleParser.ImportBlockContext context)
+    {
+        string filename = context.filename.Text;
+
+        string importedCode = File.ReadAllText(filename);
+
+        var lexer = new SimpleLexer(new AntlrInputStream(importedCode));
+        var parser = new SimpleParser(new CommonTokenStream(lexer));
+        var importedTree = parser.program();
+
+        return null;
+        //return base.VisitImportBlock(context);
+    }
+    */
     public override object? VisitIfBlock(SimpleParser.IfBlockContext context)
     {
         //Get value

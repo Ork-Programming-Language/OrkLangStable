@@ -16,6 +16,7 @@
       <PackageReference Include="Antlr4.Runtime" Version="4.6.6" />
       <PackageReference Include="Antlr4BuildTasks" Version="12.2.0" />
       <PackageReference Include="LLVMSharp" Version="15.0.0-beta1" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.5.0" />
       <PackageReference Include="Microsoft.DotNet.ILCompiler" Version="8.0.0-preview.2.23128.3" />
     </ItemGroup>
 

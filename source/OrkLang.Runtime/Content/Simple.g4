@@ -11,6 +11,7 @@ ifBlock: 'if' '(' expression ')' block ('else' elseIfBlock)?;
 elseIfBlock: block | ifBlock;
 
 whileBlock: WHILE '(' expression ')' block ('else' elseIfBlock);
+forBlock: 'for' '(' assignment ';' expression ';' expression ')' block;
 
 namespaceBlock: 'namespace' IDENTIFIER block;
 constructorBlock: 'constructor' IDENTIFIER block;
@@ -35,6 +36,7 @@ expression
     | functionCall                      #functionCallExpression
     | '(' expression ')'                #parenthesizedExpression
     | '!' expression                    #notExpression
+    | ('++' | '--')                     #incrementDecrementExpression
     | expression multOp expression      #multiplicativeExpression
     | expression addOp expression       #additiveExpression
     | expression compareOp expression   #comparisonExpression

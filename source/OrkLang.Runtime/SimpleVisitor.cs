@@ -230,6 +230,30 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
         //return base.VisitFunctionCall(context);
     }
 
+    /*
+    public override object VisitForBlock([NotNull] SimpleParser.ForBlockContext context)
+    {
+        var initial = (int)Visit(context.assignment());
+
+        //Get value
+        var compCondition = context.expression(0) as SimpleParser.ComparisonExpressionContext;
+
+        var condition = (Func<bool>)VisitComparisonExpression(compCondition);
+
+        var increment = (Action)Visit(context.expression(1));
+
+        Console.WriteLine($"Initial = {initial}");
+        Console.WriteLine($"Condition = {condition}");
+        Console.WriteLine($"Increment = {increment}");
+        for (int i = initial; condition(); increment())
+        {
+            Visit(context.block());
+        }
+
+        return null;
+        //return base.VisitForBlock(context);
+    }
+    */
     public override object? VisitIdentifierExpression(SimpleParser.IdentifierExpressionContext context)
     {
         var varName = context.IDENTIFIER().GetText();

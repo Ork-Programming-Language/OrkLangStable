@@ -12,29 +12,7 @@ else
     print("false");
 }
 
-namespace exampleNamespace
-{
-
-    //func example()
-    //{
-    //    print("func = hello world");
-    //}
-    
-    //func example2(i)
-    //{
-    //    print("func2 = hello world");
-    //}
-    
-    class myClass
-    {
-        print("class = hello world");
-    }
-
-    //need to store function names and params
-    //example();
-    
-    print("namespace = hello world");
-}
+//remove namespace and class for the moment
 
 class exampleCube
 {
@@ -73,6 +51,8 @@ j = i + 1.2;
 
 print("i is: " + i);
 print("j is: " + i);
+
+print("10: " + convert("10"))
 
 //write("Enter value: ");
 //k = readLine();

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net.Sockets;
 using System.Numerics;
 using System.Reflection;
@@ -54,6 +55,9 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
         Variables["print"] = new Func<object?[], object?>(PrintLn);
         Variables["write"] = new Func<object?[], object?>(Write);
         Variables["readLine"] = new Func<object?[], object?>(ReadLine);
+
+        //Operators
+        Variables["convert"] = new Func<object?[], object?>(args => ParseConvert(args));
         
         //isConstant = false;
         //value = null;
@@ -82,6 +86,48 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
     private object? ReadLine(object?[] args)
     {
         return Console.ReadLine();
+    }
+
+    private object? ParseConvert(object?[] args)
+    {
+        if (args.Length == 0 || args[0] == null || string.IsNullOrWhiteSpace(args[0]?.ToString()))
+        {
+            return null;
+        }
+
+        ParseTo(args[0], out var result);
+        return result;
+    }
+
+    private void ParseTo(object? input, out object? result)
+    {
+        
+        if (int.TryParse(input.ToString(), out var intResult))
+        {
+            result = intResult;
+        }
+
+        // Try parsing as a float
+        if (float.TryParse(input.ToString(), out var floatResult))
+        {
+            result = (int)floatResult;
+        }
+
+        if (bool.TryParse(input.ToString(), out var boolResult))
+        {
+            result = (bool)boolResult;
+        }
+
+        // Try parsing as another data type
+        object convertedResult = Convert.ChangeType(input, typeof(int), CultureInfo.InvariantCulture);
+        result = convertedResult;
+    }
+
+    void test()
+    {
+        // var memberAccess = SimpleParser
+        /*Member access *does* exist, we just need to pair it with something */
+        //var memberAccess = SimpleParser.MemberAccessContext.memberAccess();
     }
 
     public override object? VisitIfBlock(SimpleParser.IfBlockContext context)
@@ -142,77 +188,7 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
         return null; //base.VisitAssignment(context);
     }
 
-    #region TempOld
-    /*
-    //funcBlock: 'func' IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block;
-    public override object? VisitFuncBlock(SimpleParser.FuncBlockContext context)
-    {
-        bool shouldExecute = false;
-
-        Console.WriteLine(context.IDENTIFIER(0).GetText());
-        
-        var functionName = context.IDENTIFIER(0).GetText();
-
-        var parameterNames = context.IDENTIFIER().Skip(1).Select(x => x.GetText());
-
-        Variables[functionName] = new Func<object?[], object?>(args => parameterNames);
-            
-        var block = context.block();
-
-        if (context.Parent is SimpleParser.FunctionCallContext)
-        {
-            var funcCallContext = (SimpleParser.FunctionCallContext)context.Parent;
-
-            if (funcCallContext.IDENTIFIER().GetText() == context.IDENTIFIER(0).GetText())
-            {
-                shouldExecute = true;
-            }
-        }
-        
-        if (shouldExecute)
-        {
-            // Define a delegate to execute the block with the given parameter names and variables
-            Func<object?[], object?> func = args =>
-            {
-                // Store the parameter values in the variables dictionary
-                for (int i = 0; i < parameterNames.Count(); i++)
-                {
-                    Variables[parameterNames.ElementAt(i)] = args.ElementAt(i);
-                }
-
-                // Execute the block of statements in the function
-                var result = Visit(block);
-
-                // Clear the parameter values from the variables dictionary
-                foreach (var parameterName in parameterNames)
-                {
-                    Variables.Remove(parameterName);
-                }
-
-                return result;
-            };
-
-            // Store the function delegate in the variables dictionary
-            Variables[functionName] = func;
-
-            return null;
-        }
-
-        return null;
-        //return base.VisitFuncBlock(context);
-    }*/
-
-    /*
-    public override object? VisitBlock(SimpleParser.BlockContext context)
-    {
-        foreach (var statement in context.statement())
-        {
-            Visit(statement);
-        }
-
-        return null; //base.VisitBlock(context);
-    } */
-    #endregion
+    /* Go back to the drawing board with functions */
 
     public override object? VisitNamespaceBlock(SimpleParser.NamespaceBlockContext context)
     {

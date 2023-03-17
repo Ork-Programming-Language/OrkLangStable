@@ -2,7 +2,7 @@ grammar Simple;
 
 program: line* EOF;
 
-line: statement | ifBlock | whileBlock | namespaceBlock | constructorBlock | classBlock | funcBlock | block;
+line: statement | ifBlock | whileBlock | funcBlock | namespaceBlock | constructorBlock | classBlock | block;
 
 statement: (assignment | functionCall) ';';
 
@@ -39,6 +39,15 @@ expression
     | expression addOp expression       #additiveExpression
     | expression compareOp expression   #comparisonExpression
     | expression boolOp expression      #booleanExpression
+    ;
+
+memberAccess
+    : IDENTIFIER '.' IDENTIFIER '(' argumentList? ')' #methodCallExpression
+    | IDENTIFIER '.' IDENTIFIER                       #fieldCallExpression
+    ;
+
+argumentList
+    : expression ('.' expression)*
     ;
 
 multOp: '*' | '/' | '%';

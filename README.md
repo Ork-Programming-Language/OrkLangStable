@@ -9,6 +9,11 @@ Orklang (written in c#) with paired with antlr4 generators
 **Comments**
 ```csharp
 //comment goes here
+
+/*
+Multi-line comments
+Go here
+*/
 ```
 
 **Notes:**
@@ -85,6 +90,13 @@ else
 }
 ```
 
+**Boolean Conditions**
+* or / and / xor
+* || / && / ^
+
+**Bitwise Conditions**
+* Planned for next update
+
 **Known Issues**
 * Multi-Line comments don't exist yet
 * You can accidently override built-in functions if not careful
@@ -94,5 +106,5 @@ else
   
 **Planned functionality**
 * Support for for() statements
-* Multi-Line comments
+* Sometype of external access for feature expandablity
 * Sometype of functions

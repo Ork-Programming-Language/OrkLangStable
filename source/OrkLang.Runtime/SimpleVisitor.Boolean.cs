@@ -16,7 +16,7 @@ public partial class SimpleVisitor
         var left = Visit(context.expression(0));
         var right = Visit(context.expression(1));
 
-        var op = context.boolOp().GetText();
+        var op = context.BOOL_OP().GetText();
 
 
         return op switch

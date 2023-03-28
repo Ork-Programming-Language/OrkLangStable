@@ -9,7 +9,7 @@ public partial class SimpleVisitor
         var left = Visit(context.expression(0));
         var right = Visit(context.expression(1));
 
-        var op = context.compareOp().GetText();
+        var op = context.COMPARE_OP().GetText();
 
         return op switch
         {
@@ -19,6 +19,8 @@ public partial class SimpleVisitor
             ">=" => GreaterThanOrEqual(left, right),
             "<" => LessThan(left, right),
             "<=" => LessThanOrEqual(left, right),
+
+            //replace default with diagnostics bag
             _ => throw new NotImplementedException()
         };
         //return base.VisitComparisonExpression(context);

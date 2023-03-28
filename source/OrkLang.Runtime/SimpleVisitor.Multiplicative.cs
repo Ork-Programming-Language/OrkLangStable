@@ -9,7 +9,7 @@ public partial class SimpleVisitor
         var left = Visit(context.expression(0));
         var right = Visit(context.expression(1));
 
-        var op = context.multOp().GetText();
+        var op = context.MULT_OP().GetText();
 
         return op switch
         {

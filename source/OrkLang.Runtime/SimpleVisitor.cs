@@ -4,8 +4,6 @@ using System.Numerics;
 using System.Reflection;
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
-using Microsoft.CodeAnalysis.CSharp.Scripting;
-using Microsoft.CodeAnalysis.Scripting;
 using OrkLang.Runtime.Content;
 
 namespace OrkLang.Runtime;
@@ -60,9 +58,6 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
 
         //Operators
         Variables["convert"] = new Func<object?[], object?>(args => ParseConvert(args));
-        
-        //isConstant = false;
-        //value = null;
     }
 
     private object? Write(object?[] args)
@@ -127,28 +122,10 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
 
     void test()
     {
-        
         // var memberAccess = SimpleParser
         /*Member access *does* exist, we just need to pair it with something */
         //var memberAccess = SimpleParser.MemberAccessContext.memberAccess();
     }
-
-    /*
-    public override object VisitInlineBlock([NotNull] SimpleParser.InlineBlockContext context)
-    {
-        string csharpCode = context.csharpCode().GetText();
-        Console.WriteLine(csharpCode);
-        ScriptState<object> state = CSharpScript.RunAsync(csharpCode).Result;
-
-        foreach (var variable in state.Variables)
-        {
-            Variables[variable.Name] = variable.Value;
-        }
-
-        //was I always missing return null?
-        return null;
-        //return base.VisitInlineBlock(context);
-    }*/
 
     public override object VisitTryCatchBlock([NotNull] SimpleParser.TryCatchBlockContext context)
     {
@@ -246,7 +223,7 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
 
         Variables[varName] = value;
 
-        return null; //base.VisitAssignment(context);
+        return null;
     }
 
     /* Go back to the drawing board with functions */
@@ -260,7 +237,6 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
         Namespaces[varName] = value;
         
         return null;
-        //return base.VisitNamespaceBlock(context);
     }
 
     public override object? VisitClassBlock(SimpleParser.ClassBlockContext context)
@@ -272,7 +248,6 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
         Classes[varName] = value;
         
         return null;
-        //return base.VisitClassBlock(context);
     }
 
     //functionCall: IDENTIFIER '(' (expression (',' expression)*)? ')';
@@ -364,10 +339,6 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
             {
                 Visit(context.block());
             }
-            //do
-           // {
-           //     Visit(context.block());
-           // } while (condition(Visit(context.expression())));
         }
         else
         {
@@ -377,25 +348,6 @@ public partial class SimpleVisitor : SimpleBaseVisitor<object?> //SimpleValue
         return null;
         //return base.VisitWhileBlock(context);
     }
-
-    /*
-    public override object? VisitIfBlock(SimpleParser.IfBlockContext context)
-    {
-        var condition = context.GetText(); //'if' or 'unless'
-        
-        if (IsTrue(Visit(context.expression())))
-        {
-            Visit(context.block());
-        }
-        else
-        {
-            Visit(context.elseIfBlock());
-        }
-
-        return null;
-        //return base.VisitIfBlock(context);
-    }
-    */
 
     //@ SimpleVisitor.Comparison.cs
    

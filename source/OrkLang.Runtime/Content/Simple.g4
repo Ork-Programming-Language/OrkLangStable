@@ -1,32 +1,72 @@
 grammar Simple;
 
+// Lexer Part
+
+// tokens
+SEMICOLON: ';';
+
+INTEGER: [0-9]+;
+FLOAT: [0-9]+ '.' [0-9]+;
+STRING: ('"' ~'"'* '"') | ('\'' ~'\''* '\'');
+
+BOOL: 'true' | 'false';
+NULL: 'null';
+WHILE: 'while' | 'until';
+
+// Keywords
+IF: 'if';
+ELSE: 'else';
+FOR: 'for';
+NAMESPACE: 'namespace';
+CONSTRUCTOR: 'constructor';
+CLASS: 'class';
+FUNC: 'func';
+TRY: 'try';
+CATCH: 'catch';
+
+// Operators
+MULT_OP: '*' | '/' | '%';
+ADD_OP: '+' | '-';
+COMPARE_OP: '==' | '!=' | '>' | '<' | '>=' | '<=';
+BOOL_OP: 'and' | 'or' | 'xor' | '&&' | '||' | '^';
+
+// Tokens with actions
+STRING_LITERAL: '"' ( '\\' [btnfr"'\\] | ~[\r\n\\"] )* '"';
+IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
+
+// Ignored tokens
+WS: [ \t\r\n]+ -> skip;
+SL_Comment: '//' ~[\r\n]* -> skip;
+ML_Comment: '/*' .*? '*/' -> skip;
+
+// Parser Part
 program: line* EOF;
 
 line: statement | ifBlock | whileBlock | tryCatchBlock | funcBlock | namespaceBlock | constructorBlock | classBlock | block;
 
-statement: (assignment | functionCall) ';'; //importBlock |
+statement: (assignment | functionCall) SEMICOLON; //importBlock |
 
-ifBlock: 'if' '(' expression ')' block ('else' elseIfBlock)?;
+ifBlock: IF '(' expression ')' block (ELSE elseIfBlock)?;
 
 elseIfBlock: block | ifBlock;
 
-whileBlock: WHILE '(' expression ')' block ('else' elseIfBlock);
-forBlock: 'for' '(' assignment ';' expression ';' expression ')' block;
+whileBlock: WHILE '(' expression ')' block (ELSE elseIfBlock);
+forBlock: FOR '(' assignment ';' expression ';' expression ')' block;
 
-namespaceBlock: 'namespace' IDENTIFIER block;
-constructorBlock: 'constructor' IDENTIFIER block;
-classBlock: 'class' IDENTIFIER block;
+namespaceBlock: NAMESPACE IDENTIFIER block;
+constructorBlock: CONSTRUCTOR IDENTIFIER block;
+classBlock: CLASS IDENTIFIER block;
 
-funcBlock: 'func' IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block;
+funcBlock: FUNC IDENTIFIER '(' (IDENTIFIER (',' IDENTIFIER)*)? ')' block;
 
-tryCatchBlock: 'try' block 'catch' block; //eventually support exceptions
+tryCatchBlock: TRY block CATCH block; //eventually support exceptions
 
 //importBlock: 'import' filename=STRING_LITERAL;
 
 //what goes into a ternay block exactly
 //TernayOperatorBlock: expression '?' STRING ':' STRING ';';
 
-WHILE: 'while' | 'until';
+
 
 //function Keywords (Cannot be overwritten)
 //Print: 'print';
@@ -37,10 +77,6 @@ assignment: IDENTIFIER '=' expression;
 
 functionCall: IDENTIFIER '(' (expression (',' expression)*)? ')';
 
-//inlineBlock: 'inline' '{{' csharpCode '}}';
-
-//csharpCode: .*?;
-
 expression
     : constant                          #constantExpression
     | IDENTIFIER                        #identifierExpression
@@ -48,10 +84,10 @@ expression
     | '(' expression ')'                #parenthesizedExpression
     | '!' expression                    #notExpression
     | expression increment              #incrementDecrementExpression //i++ //note expression(i) increment expression(i) doesnt work we need increment expression increment
-    | expression multOp expression      #multiplicativeExpression
-    | expression addOp expression       #additiveExpression
-    | expression compareOp expression   #comparisonExpression
-    | expression boolOp expression      #booleanExpression
+    | expression MULT_OP expression      #multiplicativeExpression
+    | expression ADD_OP expression       #additiveExpression
+    | expression COMPARE_OP expression   #comparisonExpression
+    | expression BOOL_OP expression      #booleanExpression
     ;
 
 memberAccess
@@ -64,36 +100,12 @@ argumentList
     ;
 
 increment: '++' | '--';
-multOp: '*' | '/' | '%';
-addOp: '+' | '-';
-compareOp: '==' | '!=' | '>' | '<' | '>=' | '<=';
-boolOp: BOOL_OPERATOR;
-//&&, ||, ^, ~
-BOOL_OPERATOR: 'and' | 'or' | 'xor' | '&&' | '||' | '^';
+
 
 constant: INTEGER | FLOAT | STRING | BOOL | NULL;
 
-INTEGER: [0-9]+;
-FLOAT: [0-9]+ '.' [0-9]+;
-STRING: ('"' ~'"'* '"') | ('\'' ~'\''* '\'');
-BOOL: 'true' | 'false';
-NULL: 'null';
-
-SEMICOLON: ';';
-
-STRING_LITERAL 
- : '"' ( '\\' [btnfr"'\\] | ~[\r\n\\"] )* '"'
- ;
+BOOL_OPERATOR: BOOL_OP;
 
 block: '{' line* '}';
-
-WS: [ \t\r\n]+ -> skip;
-IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
-
-//Comments
-SL_Comment: '//' CommentLine* -> skip;
-fragment CommentLine: ~[\\\r\n] | Escape;
-
-ML_Comment: '/*' .*? '*/' -> skip;
 
 fragment Escape: '\\\'' | '\\"' | '\\\\' | '\\n' | '\\r';
